@@ -15,25 +15,6 @@ public class PatientServiceImpl implements PatientService {
         this.patientRepository = patientRepository;
     }
 
-    @Override
-    public List<Patient> getAllPatients() {
-        return patientRepository.findAll();
-    }
-
-    @Override
-    public Patient getPatientById(Long id) {
-        return patientRepository.findById(id).orElse(null);
-    }
-
-    @Override
-    public void savePatient(Patient patient) {
-        patientRepository.save(patient);
-    }
-
-    @Override
-    public void deletePatient(Long id) {
-        patientRepository.deleteById(id);
-    }
 
     @Override
     public Page<Patient> findByNomContains(String keyword, Pageable pageable) {
