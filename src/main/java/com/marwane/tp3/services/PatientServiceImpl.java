@@ -15,7 +15,6 @@ public class PatientServiceImpl implements PatientService {
         this.patientRepository = patientRepository;
     }
 
-
     @Override
     public Page<Patient> findByNomContains(String keyword, Pageable pageable) {
         return patientRepository.findByNomContains(keyword, pageable);
