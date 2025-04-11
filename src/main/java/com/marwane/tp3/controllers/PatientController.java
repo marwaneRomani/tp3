@@ -2,11 +2,11 @@ package com.marwane.tp3.controllers;
 import com.marwane.tp3.entities.Patient;
 import com.marwane.tp3.repositories.PatientRepository;
 import com.marwane.tp3.services.PatientService;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
@@ -48,10 +48,8 @@ public class PatientController {
     }
 
     @PostMapping("/savePatient")
-    public String savePatient(@Valid Patient patient, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            return "formPatient";
-        }
+    public String savePatient(@Valid Patient patient) {
+
         patientService.savePatient(patient);
         return "redirect:/patients";
     }
