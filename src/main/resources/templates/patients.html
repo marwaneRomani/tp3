@@ -1,31 +1,86 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{template}"
+>
 <head>
-    <title>Liste des patients</title>
+    <meta charset="UTF-8" />
+    <title>Patients</title>
 </head>
 <body>
-<h1>Liste des patients</h1>
-<table>
-    <thead>
-    <tr>
-        <th>ID</th>
-        <th>Nom</th>
-        <th>Date de Naissance</th>
-        <th>Malade</th>
-        <th>Actions</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="patient : ${patients}">
-        <td th:text="${patient.id}"></td>
-        <td th:text="${patient.nom}"></td>
-        <td th:text="${patient.dateNaissance}"></td>
-        <td th:text="${patient.malade ? 'Oui' : 'Non'}"></td>
-        <td>
-            <a th:href="@{/patients/delete/{id}(id=${patient.id})}">Supprimer</a>
-        </td>
-    </tr>
-    </tbody>
-</table>
+<div layout:fragment="content">
+    <div class="container mt-3">
+        <div class="card">
+            <div class="card-header">Liste des patients</div>
+            <div class="card-body">
+                <form method="get" th:action="@{/patients}">
+                    <div class="input-group mb-3">
+                        <input
+                                type="text"
+                                class="form-control"
+                                name="keyword"
+                                th:value="${keyword}"
+                        />
+                        <button class="btn btn-primary" type="submit">Chercher</button>
+                    </div>
+                </form>
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nom</th>
+                        <th>Date de naissance</th>
+                        <th>Malade</th>
+                        <th>Score</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="p:${listPatients}">
+                        <td th:text="${p.id}"></td>
+                        <td th:text="${p.nom}"></td>
+                        <td th:text="${#dates.format(p.dateNaissance, 'dd/MM/yyyy')}"></td>
+                        <td th:text="${p.malade}"></td>
+                        <td th:text="${p.score}"></td>
+                        <td>
+                            <a
+                                    onclick="return confirm('Êtes-vous sûr?')"
+                                    th:href="@{/deletePatient(id=${p.id}, keyword=${keyword}, page=${currentPage})}"
+                                    class="btn btn-danger"
+                            >
+                                Supprimer
+                            </a>
+                            <a
+                                    th:href="@{/editPatient(id=${p.id})}"
+                                    class="btn btn-warning"
+                            >
+                                Modifier
+                            </a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                <ul class="nav nav-pills">
+                    <li th:each="page,status:${pages}">
+                        <a
+                                th:class="${status.index==currentPage?'btn btn-primary ms-1':'btn btn-outline-primary ms-1'}"
+                                th:text="${status.index}"
+                                th:href="@{/patients(page=${status.index}, keyword=${keyword})}"
+                        ></a>
+                    </li>
+                </ul>
+                <div class="mt-3">
+                    <a
+                            class="btn btn-success"
+                            th:href="@{/formPatient}"
+                     >
+                        Nouveau Patient
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 </html>

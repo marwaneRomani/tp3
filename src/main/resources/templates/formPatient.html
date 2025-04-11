@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{template}"
+>
+<head>
+    <meta charset="UTF-8" />
+    <title>Nouveau Patient</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="container mt-3">
+        <div class="card">
+            <div class="card-header">Nouveau Patient</div>
+            <div class="card-body">
+                <form
+                        method="post"
+                        th:action="@{/savePatient}"
+                        th:object="${patient}"
+                >
+                    <div class="mb-3">
+                        <label class="form-label">Nom</label>
+                        <input type="text" class="form-control" th:field="*{nom}" />
+                        <span class="text-danger" th:errors="*{nom}"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Date de naissance</label>
+
+                        <input type="date" th:field="*{dateNaissance}" class="form-control" />
+
+                        <span class="text-danger" th:errors="*{dateNaissance}"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Malade</label>
+                        <input type="checkbox" th:field="*{malade}" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Score</label>
+                        <input type="text" class="form-control" th:field="*{score}" />
+                        <span class="text-danger" th:errors="*{score}"></span>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Enregistrer</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
