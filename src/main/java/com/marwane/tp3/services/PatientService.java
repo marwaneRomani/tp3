@@ -8,5 +8,5 @@ import java.util.List;
 
 public interface PatientService {
 
-    Page<Patient> findByNomContains(String keyword, Pageable pageable);
+    Page<Patient> findPatientsByName(String keyword, int page, int size);
 }
