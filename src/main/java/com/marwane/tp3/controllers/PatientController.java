@@ -49,7 +49,6 @@ public class PatientController {
 
     @PostMapping("/savePatient")
     public String savePatient(@Valid Patient patient) {
-
         patientService.savePatient(patient);
         return "redirect:/patients";
     }
