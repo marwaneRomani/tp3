@@ -10,68 +10,56 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
-@RequestMapping("/patients")
 public class PatientController {
-    private final PatientRepository patientRepository;
-    private final PatientService patientService;
+    private PatientService patientService;
 
-    public PatientController(PatientRepository patientRepository, PatientService patientService) {
-        this.patientRepository = patientRepository;
+    public PatientController(PatientService patientService) {
         this.patientService = patientService;
     }
 
-    // Afficher la liste des patients avec pagination et recherche
-    @GetMapping
-    public String listPatients(Model model,
-                               @RequestParam(name = "page", defaultValue = "0") int page,
-                               @RequestParam(name = "size", defaultValue = "5") int size,
-                               @RequestParam(name = "keyword", defaultValue = "") String keyword) {
-        Pageable pageable = PageRequest.of(page, size);
+    @GetMapping("/")
+    public String home() {
+        return "redirect:/patients";
+    }
 
-        Page<Patient> patientPage = patientService.findByNomContains(keyword, pageable);
-
-        model.addAttribute("patients", patientPage.getContent());
+    @GetMapping("/patients")
+    public String patients(Model model,
+                           @RequestParam(name = "page", defaultValue = "0") int page,
+                           @RequestParam(name = "size", defaultValue = "5") int size,
+                           @RequestParam(name = "keyword", defaultValue = "") String keyword) {
+        Page<Patient> pagePatients = patientService.findPatientsByName(keyword, page, size);
+        model.addAttribute("listPatients", pagePatients.getContent());
+        model.addAttribute("pages", new int[pagePatients.getTotalPages()]);
         model.addAttribute("currentPage", page);
-        model.addAttribute("totalPages", patientPage.getTotalPages());
         model.addAttribute("keyword", keyword);
-
-        return "patients/list";
+        return "patients";
     }
 
-    // Afficher le formulaire d'ajout
-    @GetMapping("/add")
-    public String showAddPatientForm(Model model) {
+    @GetMapping("/deletePatient")
+    public String delete(Long id, String keyword, int page) {
+        patientService.deletePatient(id);
+        return "redirect:/patients?page="+page+"&keyword="+keyword;
+    }
+
+    @GetMapping("/formPatient")
+    public String formPatient(Model model) {
         model.addAttribute("patient", new Patient());
-        return "patients/add";
+        return "formPatient";
     }
 
-    // Ajouter un patient
-    @PostMapping("/save")
-    public String savePatient(@ModelAttribute Patient patient) {
-        patientRepository.save(patient);
+    @PostMapping("/savePatient")
+    public String savePatient(@Valid Patient patient, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "formPatient";
+        }
+        patientService.savePatient(patient);
         return "redirect:/patients";
     }
 
-    // Afficher le formulaire d'édition
-    @GetMapping("/edit/{id}")
-    public String showEditPatientForm(@PathVariable Long id, Model model) {
-        Patient patient = patientRepository.findById(id).orElse(null);
-        if (patient == null) return "redirect:/patients";
+    @GetMapping("/editPatient")
+    public String editPatient(Model model, Long id) {
+        Patient patient = patientService.getPatient(id);
         model.addAttribute("patient", patient);
-        return "patients/edit";
-    }
-
-    // Mettre à jour un patient
-    @PostMapping("/update")
-    public String updatePatient(@ModelAttribute Patient patient) {
-        patientRepository.save(patient);
-        return "redirect:/patients";
-    }
-
-    // Supprimer un patient
-    @GetMapping("/delete/{id}")
-    public String deletePatient(@PathVariable Long id) {
-        patientRepository.deleteById(id);
-        return "redirect:/patients";
+        return "editPatient";
     }
 }
