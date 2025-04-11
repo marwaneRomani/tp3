@@ -10,49 +10,78 @@
 </head>
 <body>
 <div layout:fragment="content">
-    <div class="container mt-3">
-        <div class="card">
-            <div class="card-header">Modifier Patient</div>
-            <div class="card-body">
-                <form
-                        method="post"
-                        th:action="@{/savePatient}"
-                        th:object="${patient}"
-                >
-                    <div class="mb-3">
-                        <label class="form-label">ID</label>
-                        <input
-                                type="text"
-                                class="form-control"
-                                readonly
-                                th:field="*{id}"
-                        />
+    <div class="container mt-4">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">Modifier Patient</div>
+                    <div class="card-body">
+                        <form
+                                method="post"
+                                th:action="@{/savePatient}"
+                                th:object="${patient}"
+                                class="needs-validation"
+                        >
+                            <div class="mb-3">
+                                <label class="form-label">ID</label>
+                                <input
+                                        type="text"
+                                        class="form-control"
+                                        readonly
+                                        th:field="*{id}"
+                                />
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Nom</label>
+                                <input
+                                        type="text"
+                                        class="form-control"
+                                        th:field="*{nom}"
+                                        placeholder="Entrez le nom"
+                                />
+                                <span class="text-danger" th:errors="*{nom}"></span>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Date de naissance</label>
+                                <input
+                                        type="date"
+                                        class="form-control"
+                                        th:field="*{dateNaissance}"
+                                />
+                                <span
+                                        class="text-danger"
+                                        th:errors="*{dateNaissance}"
+                                ></span>
+                            </div>
+                            <div class="mb-3 form-check">
+                                <input
+                                        type="checkbox"
+                                        class="form-check-input"
+                                        th:field="*{malade}"
+                                />
+                                <label class="form-check-label">Malade</label>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Score</label>
+                                <input
+                                        type="text"
+                                        class="form-control"
+                                        th:field="*{score}"
+                                        placeholder="Entrez le score"
+                                />
+                                <span class="text-danger" th:errors="*{score}"></span>
+                            </div>
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-primary">
+                                    Enregistrer
+                                </button>
+                                <a th:href="@{/patients}" class="btn btn-secondary"
+                                >Annuler</a
+                                >
+                            </div>
+                        </form>
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label">Nom</label>
-                        <input type="text" class="form-control" th:field="*{nom}" />
-                        <span class="text-danger" th:errors="*{nom}"></span>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Date de naissance</label>
-                        <input
-                                type="date"
-                                class="form-control"
-                                th:field="*{dateNaissance}"
-                        />
-                        <span class="text-danger" th:errors="*{dateNaissance}"></span>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Malade</label>
-                        <input type="checkbox" th:field="*{malade}" />
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Score</label>
-                        <input type="text" class="form-control" th:field="*{score}" />
-                        <span class="text-danger" th:errors="*{score}"></span>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Enregistrer</button>
-                </form>
+                </div>
             </div>
         </div>
     </div>
