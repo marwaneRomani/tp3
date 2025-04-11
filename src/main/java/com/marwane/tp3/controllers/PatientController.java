@@ -48,7 +48,12 @@ public class PatientController {
     }
 
     @PostMapping("/savePatient")
-    public String savePatient(@Valid Patient patient) {
+    public String savePatient(@Valid Patient patient, BindingResult bindingResult) {
+
+        if (bindingResult.hasErrors()) {
+            return "formPatient";
+        }
+
         patientService.savePatient(patient);
         return "redirect:/patients";
     }
